@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  bucket_creator:
+    image: amazon/aws-cli
+    entrypoint: /bin/sh -c "sleep 5; aws --no-sign-request --region us-east-1 --endpoint-url=http://localstack:4566 s3 mb s3://meu-bucket"
+
+  uploader:
+    build: .
+    environment:
+      - AWS_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_ENDPOINT=https://localhost.localstack.cloud:4566
+    depends_on:
+      - bucket_creator
